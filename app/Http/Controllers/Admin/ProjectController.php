@@ -8,6 +8,7 @@ use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProjectController extends Controller
@@ -43,9 +44,14 @@ class ProjectController extends Controller
         $slug = Str::slug($request->title, '-');
         $validated['slug'] = $slug;
 
+        if($request->has('cover_image')) {
+            $image_path = Storage::put('uploads', $validated['cover_image']);
+            $validated['cover_image'] = $image_path;
+        }
+
         /* create */
         Project::create($validated);
-
+        
         /* redirect */
         return to_route('admin.projects.index')->with('message', "Project $request->title created correctly");
     }
@@ -78,6 +84,15 @@ class ProjectController extends Controller
         $slug = Str::slug($request->title, '-');
         $validated['slug'] = $slug;
 
+        /* usa public storage */
+        if($request->has('cover_image')) {
+            if($project->cover_image){
+                Storage::delete($project->cover_image);
+            }
+            $image_path = Storage::put('uploads', $validated['cover_image']);
+            $validated['cover_image'] = $image_path;
+        }
+
         /* update */
         $project->update($validated);
 
@@ -92,8 +107,13 @@ class ProjectController extends Controller
      * Remove the specified resource from storage.
      */
     public function destroy(Project $project)
-    {
+    {   
+        if($project->cover_image){
+            Storage::delete('project->cover_image');
+        }
+
         $project->delete();
+
         return to_route('admin.projects.index')->with('message', "Project $project->title deleted correctly");
     }
 }

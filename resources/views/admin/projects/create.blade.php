@@ -17,10 +17,10 @@
 		{{-- segnala errori --}}
 		@include('partials.validation-messages')
 
-		<form action="{{ route('admin.projects.store') }}" method="post">
+		<form action="{{ route('admin.projects.store') }}" method="post" enctype="multipart/form-data">
 			@csrf
 			<div class="mb-3">
-				<label for="" class="form-label">Title</label>
+				<label for="title" class="form-label">Title</label>
 				<input type="text" class="form-control id= @error('title') is-invalid @enderror" name="title" id="title"
 					aria-describedby="helpId" placeholder="" value="{{ old('title') }}" />
 				<small id="helpId" class="form-text text-muted">Enter a title for this project</small>
@@ -37,12 +37,13 @@
 				<select class="form-select form-select-lg" name="type_id" id="type_id">
 					<option selected disabled>Select a type</option>
 					@foreach ($types as $type)
-						<option value="{{ $type->id }}" {{$type->id == old('type_id') ? 'selected' : ''}}>{{ $type->name }}</option>
+						<option value="{{ $type->id }}" {{ $type->id == old('type_id') ? 'selected' : '' }}>{{ $type->name }}
+						</option>
 					@endforeach
 				</select>
 			</div>
 
-			<div class="mb-3">
+			{{-- <div class="mb-3">
 				<label for="cover_image" class="form-label">Cover image</label>
 				<input type="text" class="form-control @error('cover_image') is-invalid @enderror" name="cover_image"
 					id="cover_image" aria-describedby="helpId" placeholder="" value="{{ old('cover_image') }}" />
@@ -52,7 +53,15 @@
 						{{ $message }}
 					</div>
 				@enderror
+			</div> --}}
+
+			<div class="mb-3">
+				<label for="" class="form-label">Cover image</label>
+				<input type="file" class="form-control" name="cover_image" id="cover_image" aria-describedby="helpId"
+					placeholder="cover_image" />
+				<small id="helpId" class="form-text text-muted">add a cover image</small>
 			</div>
+
 
 			<div class="mb-3">
 				<label for="content" class="form-label">Content</label>

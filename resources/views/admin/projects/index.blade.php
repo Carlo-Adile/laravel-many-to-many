@@ -37,7 +37,7 @@
 							<tr>
 
 								<td scope="row">{{ $project->id }}</td>
-								<td><img src="{{ $project->cover_image }}" alt="{{ $project->title }}" width="140"></td>
+								<td><img src="{{ asset('storage/' . $project->cover_image) }}" alt="{{ $project->title }}" width="140"></td>
 								<td>{{ $project->title }}</td>
 								<td>{{ $project->slug }}</td>
 								<td>
