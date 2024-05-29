@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Models\Project;
 use App\Models\Type;
+use App\Models\Technology;
 use App\Http\Requests\StoreProjectRequest;
 use App\Http\Requests\UpdateProjectRequest;
 use App\Http\Controllers\Controller;
@@ -28,8 +29,9 @@ class ProjectController extends Controller
     public function create()
     {
         $types = Type::all();
+        $technologies = Technology::all();
 
-        return view('admin.projects.create', compact('types'));
+        return view('admin.projects.create', compact('types', 'technologies'));
     }
 
     /**
@@ -50,7 +52,15 @@ class ProjectController extends Controller
         }
 
         /* create */
-        Project::create($validated);
+        /* Project::create($validated); */
+
+        /* $technologies = Technology::all(); */
+        
+        $project = Project::create($validated);
+
+        if($request->has('technologies')) {
+            $project->technologies()->attach($validated['technologies']);
+        }
         
         /* redirect */
         return to_route('admin.projects.index')->with('message', "Project $request->title created correctly");
@@ -61,7 +71,9 @@ class ProjectController extends Controller
      */
     public function show(Project $project)
     {
-        
+        /* $technology = Technology::all();
+        return view('admin.projects.show', compact('project', 'technology')); */
+
         return view('admin.projects.show', compact('project'));
     }
 
@@ -71,7 +83,8 @@ class ProjectController extends Controller
     public function edit(Project $project)
     {
         $types = Type::all();
-        return view('admin.projects.edit', compact('project', 'types'));
+        $technologies = Technology::all();
+        return view('admin.projects.edit', compact('project', 'types', 'technologies'));
     }
 
     /**
@@ -109,7 +122,7 @@ class ProjectController extends Controller
     public function destroy(Project $project)
     {   
         if($project->cover_image){
-            Storage::delete('project->cover_image');
+            Storage::delete($project->cover_image);
         }
 
         $project->delete();

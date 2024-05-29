@@ -24,6 +24,28 @@
 			<div class="metadata">
 				<strong>Type</strong> {{ $project->type ? $project->type->name : 'no type selected' }}
 			</div>
+
+			{{-- <div class="metadata">
+				<strong>Technologies</strong> 
+				@foreach($technologies as $technology) 
+				{{ $project->technology ? $project->technology->name : 'no technologies selected' }}
+				@endforeach
+			</div> --}}
+
+			{{-- <div class="metadata">
+				<strong>Technologies</strong> 
+				{{$project->$technology}}
+			</div> --}}
+
+			<div class="metadata">
+				<strong>Technologies</strong> 
+				@forelse ($project->technologies as $technology)
+						{{$technology->name}}
+						@empty 
+						<span>none</span>
+				@endforelse
+			</div>
+
 		</div>
 	</section>
 @endsection

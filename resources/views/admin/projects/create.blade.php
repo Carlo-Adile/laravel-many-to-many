@@ -16,12 +16,13 @@
 
 		{{-- segnala errori --}}
 		@include('partials.validation-messages')
-
+		
 		<form action="{{ route('admin.projects.store') }}" method="post" enctype="multipart/form-data">
 			@csrf
+
 			<div class="mb-3">
 				<label for="title" class="form-label">Title</label>
-				<input type="text" class="form-control id= @error('title') is-invalid @enderror" name="title" id="title"
+				<input type="text" class="form-control @error('title') is-invalid @enderror" name="title" id="title"
 					aria-describedby="helpId" placeholder="" value="{{ old('title') }}" />
 				<small id="helpId" class="form-text text-muted">Enter a title for this project</small>
 				@error('title')
@@ -43,20 +44,22 @@
 				</select>
 			</div>
 
-			{{-- <div class="mb-3">
-				<label for="cover_image" class="form-label">Cover image</label>
-				<input type="text" class="form-control @error('cover_image') is-invalid @enderror" name="cover_image"
-					id="cover_image" aria-describedby="helpId" placeholder="" value="{{ old('cover_image') }}" />
-				<small id="helpId" class="form-text text-muted">add a cover image</small>
-				@error('cover_image')
-					<div class="text-danger py-2">
-						{{ $message }}
-					</div>
-				@enderror
-			</div> --}}
-
 			<div class="mb-3">
-				<label for="" class="form-label">Cover image</label>
+				<label for="technologies" class="form-label">Technologies used</label>
+				<div class="row row-cols-3 px-4">
+					@foreach ($technologies as $technology)
+						<div class="form-check col">
+							<input name="technologies[]" class="form-check-input" type="checkbox" value="{{ $technology->id }}"
+								id="technology-{{ $technology->id }}" />
+							<label class="form-check-label" for="technology-{{ $technology->id }}"> {{ $technology->name }} </label>
+						</div>
+					@endforeach
+				</div>
+
+			</div>
+			
+			<div class="mb-3">
+				<label for="cover_image" class="form-label">Cover image</label>
 				<input type="file" class="form-control" name="cover_image" id="cover_image" aria-describedby="helpId"
 					placeholder="cover_image" />
 				<small id="helpId" class="form-text text-muted">add a cover image</small>
@@ -74,6 +77,7 @@
 					</div>
 				@enderror
 			</div>
+
 			<button type="submit" class="btn btn-primary">
 				Create
 			</button>
